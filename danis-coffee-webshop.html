@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dani's Coffee</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{--orange:#D94E1F;--orange-light:#E8622E;--orange-dark:#B83D10;--orange-pale:#FDF0EB;--cream:#FBF6F1;--white:#FFFFFF;--dark:#1A0E08;--dark2:#2D1A0E;--gray:#8A7060;--gray-light:#E8DDD5;--success:#2D7A4F;--error:#C0392B;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Jost',sans-serif;background:var(--cream);color:var(--dark);min-height:100vh;}
+  .topbar{background:var(--orange);color:#fff;text-align:center;padding:8px;font-size:13px;letter-spacing:.5px;}
+  nav{background:#fff;box-shadow:0 2px 20px rgba(0,0,0,.08);position:sticky;top:0;z-index:1000;}
+  .nav-inner{max-width:1200px;margin:0 auto;padding:0 20px;display:flex;align-items:center;justify-content:space-between;height:70px;}
+  .logo-wrap{display:flex;align-items:center;gap:12px;cursor:pointer;}
+  .logo-circle-nav{width:45px;height:45px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-family:'Playfair Display',serif;font-weight:900;color:white;}
+  .logo-text{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;color:var(--orange);}
+  .nav-links{display:flex;gap:28px;}
+  .nav-links a{text-decoration:none;color:var(--dark);font-size:14px;font-weight:500;cursor:pointer;transition:.2s;}
+  .nav-links a:hover{color:var(--orange);}
+  .nav-right{display:flex;align-items:center;gap:8px;}
+  .lang-btn{background:none;border:1px solid var(--gray-light);padding:5px 10px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;color:var(--dark);transition:.2s;}
+  .lang-btn.active{background:var(--orange);border-color:var(--orange);color:white;}
+  .cart-btn{background:var(--orange);color:white;border:none;padding:10px 18px;border-radius:25px;cursor:pointer;font-size:14px;font-weight:600;display:flex;align-items:center;gap:8px;transition:.2s;}
+  .cart-btn:hover{background:var(--orange-dark);}
+  .cart-count{background:white;color:var(--orange);border-radius:50%;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;}
+  .hero{background:linear-gradient(135deg,var(--dark) 0%,var(--dark2) 60%,#3D2010 100%);color:white;padding:80px 20px;text-align:center;position:relative;overflow:hidden;}
+  .hero::before{content:'';position:absolute;inset:0;background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23D94E1F' fill-opacity='0.05'%3E%3Ccircle cx='30' cy='30' r='4'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");}
+  .hero-content{position:relative;max-width:700px;margin:0 auto;}
+  .hero-badge{display:inline-block;background:var(--orange);color:white;padding:6px 18px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:1px;text-transform:uppercase;margin-bottom:20px;}
+  .hero h1{font-family:'Playfair Display',serif;font-size:clamp(36px,6vw,68px);font-weight:900;line-height:1.1;margin-bottom:20px;}
+  .hero h1 span{color:var(--orange-light);font-style:italic;}
+  .hero p{font-size:18px;color:rgba(255,255,255,.7);margin-bottom:35px;font-weight:300;}
+  .hero-btns{display:flex;gap:15px;justify-content:center;flex-wrap:wrap;}
+  .btn-primary{background:var(--orange);color:white;border:none;padding:14px 32px;border-radius:30px;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;}
+  .btn-primary:hover{background:var(--orange-dark);transform:translateY(-2px);}
+  .btn-outline{background:transparent;color:white;border:2px solid rgba(255,255,255,.4);padding:14px 32px;border-radius:30px;font-size:15px;font-weight:600;cursor:pointer;transition:.2s;}
+  .btn-outline:hover{border-color:white;}
+  .features{display:flex;justify-content:center;background:var(--orange);}
+  .feature{padding:20px 30px;color:white;font-size:13px;text-align:center;border-right:1px solid rgba(255,255,255,.2);flex:1;max-width:300px;}
+  .feature:last-child{border-right:none;}
+  .feature strong{display:block;font-size:15px;margin-bottom:4px;}
+  .section{max-width:1200px;margin:0 auto;padding:60px 20px;}
+  .section-title{font-family:'Playfair Display',serif;font-size:clamp(28px,4vw,42px);font-weight:700;text-align:center;margin-bottom:10px;}
+  .section-sub{text-align:center;color:var(--gray);font-size:16px;margin-bottom:40px;}
+  .divider{width:60px;height:3px;background:var(--orange);margin:15px auto 40px;border-radius:2px;}
+  .spinner-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:60px 20px;gap:16px;color:var(--gray);}
+  .spinner{width:40px;height:40px;border:3px solid var(--gray-light);border-top-color:var(--orange);border-radius:50%;animation:spin .8s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .products-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:25px;}
+  .product-card{background:white;border-radius:16px;overflow:hidden;box-shadow:0 2px 15px rgba(0,0,0,.06);transition:.3s;}
+  .product-card:hover{transform:translateY(-5px);box-shadow:0 10px 40px rgba(217,78,31,.15);}
+  .product-img{width:100%;height:200px;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:60px;}
+  .product-body{padding:18px;}
+  .product-badge{font-size:11px;font-weight:600;color:var(--orange);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px;}
+  .product-name{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:6px;}
+  .product-desc{font-size:13px;color:var(--gray);margin-bottom:15px;line-height:1.5;}
+  .product-footer{display:flex;align-items:center;justify-content:space-between;}
+  .product-price{font-size:22px;font-weight:700;color:var(--orange);}
+  .product-price span{font-size:13px;color:var(--gray);font-weight:400;}
+  .add-btn{background:var(--orange);color:white;border:none;width:38px;height:38px;border-radius:50%;font-size:20px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center;}
+  .add-btn:hover{background:var(--orange-dark);transform:scale(1.1);}
+  .cart-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:2000;opacity:0;pointer-events:none;transition:.3s;}
+  .cart-overlay.open{opacity:1;pointer-events:all;}
+  .cart-sidebar{position:fixed;right:0;top:0;bottom:0;width:min(420px,100vw);background:white;z-index:2001;transform:translateX(100%);transition:.3s;display:flex;flex-direction:column;}
+  .cart-sidebar.open{transform:translateX(0);}
+  .cart-header{padding:25px 20px;border-bottom:1px solid var(--gray-light);display:flex;justify-content:space-between;align-items:center;}
+  .cart-header h3{font-family:'Playfair Display',serif;font-size:22px;}
+  .close-btn{background:none;border:none;font-size:24px;cursor:pointer;color:var(--gray);}
+  .cart-items{flex:1;overflow-y:auto;padding:20px;}
+  .cart-item{display:flex;align-items:center;gap:15px;padding:12px 0;border-bottom:1px solid var(--gray-light);}
+  .cart-item-emoji{font-size:35px;width:50px;text-align:center;}
+  .cart-item-info{flex:1;}
+  .cart-item-name{font-weight:600;font-size:15px;}
+  .cart-item-price{color:var(--orange);font-weight:600;}
+  .cart-item-qty{display:flex;align-items:center;gap:8px;}
+  .qty-btn{background:var(--orange-pale);border:none;width:28px;height:28px;border-radius:50%;cursor:pointer;font-weight:700;color:var(--orange);font-size:16px;}
+  .cart-footer{padding:20px;border-top:1px solid var(--gray-light);}
+  .cart-total{display:flex;justify-content:space-between;font-size:20px;font-weight:700;margin-bottom:15px;}
+  .checkout-btn{width:100%;background:var(--orange);color:white;border:none;padding:16px;border-radius:30px;font-size:16px;font-weight:700;cursor:pointer;transition:.2s;}
+  .checkout-btn:hover{background:var(--orange-dark);}
+  .empty-cart{text-align:center;padding:60px 20px;color:var(--gray);}
+  .empty-cart div{font-size:50px;margin-bottom:15px;}
+  .shipping-info{background:var(--orange-pale);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--gray);margin-bottom:15px;}
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:3000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:.3s;}
+  .modal-overlay.open{opacity:1;pointer-events:all;}
+  .modal{background:white;border-radius:20px;width:min(580px,100%);max-height:90vh;overflow-y:auto;}
+  .modal-header{padding:25px;border-bottom:1px solid var(--gray-light);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:white;z-index:1;}
+  .modal-header h3{font-family:'Playfair Display',serif;font-size:24px;}
+  .modal-body{padding:25px;}
+  .form-group{margin-bottom:18px;}
+  .form-group label{display:block;font-size:13px;font-weight:600;color:var(--gray);margin-bottom:6px;text-transform:uppercase;letter-spacing:.3px;}
+  .form-group input,.form-group select,.form-group textarea{width:100%;padding:12px 16px;border:1.5px solid var(--gray-light);border-radius:10px;font-size:15px;font-family:'Jost',sans-serif;transition:.2s;background:white;}
+  .form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--orange);}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
+  .fhint{font-size:11px;min-height:16px;margin-top:4px;display:block;}
+  .fhint.err{color:var(--error);}
+  .finvalid{border-color:var(--error)!important;}
+  .fvalid{border-color:var(--success)!important;}
+  .payment-methods{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
+  .pay-method{border:2px solid var(--gray-light);border-radius:10px;padding:12px;cursor:pointer;text-align:center;transition:.2s;}
+  .pay-method.selected{border-color:var(--orange);background:var(--orange-pale);}
+  .pay-method .icon{font-size:24px;}
+  .pay-method .label{font-size:12px;font-weight:600;margin-top:4px;}
+  .stripe-mock{background:var(--dark);color:white;border-radius:10px;padding:16px;margin-top:10px;}
+  .stripe-mock-label{font-size:11px;color:rgba(255,255,255,.5);margin-bottom:10px;letter-spacing:1px;}
+  .sinput{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:10px 12px;color:white;font-size:14px;width:100%;font-family:'Jost',sans-serif;}
+  .sinput::placeholder{color:rgba(255,255,255,.4);}
+  .sinput.finvalid{border-color:#e74c3c!important;}
+  .sinput.fvalid{border-color:#2ecc71!important;}
+  .shint{font-size:11px;min-height:15px;margin-top:3px;color:rgba(255,255,255,.5);display:block;}
+  .shint.err{color:#e74c3c;}
+  .scrow{display:flex;gap:10px;}
+  .order-summary{background:var(--orange-pale);border-radius:12px;padding:18px;margin-bottom:20px;}
+  .order-summary-title{font-weight:700;margin-bottom:10px;font-size:15px;}
+  .order-line{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;color:var(--gray);}
+  .order-total{display:flex;justify-content:space-between;font-size:18px;font-weight:700;margin-top:10px;padding-top:10px;border-top:1px solid var(--orange-light);}
+  .place-btn{width:100%;background:var(--orange);color:white;border:none;padding:16px;border-radius:30px;font-size:17px;font-weight:700;cursor:pointer;margin-top:20px;transition:.2s;font-family:'Jost',sans-serif;}
+  .place-btn:hover{background:var(--orange-dark);}
+  .place-btn:disabled{background:var(--gray);cursor:not-allowed;}
+  .success-screen{text-align:center;padding:40px 20px;}
+  .success-icon{font-size:70px;margin-bottom:20px;}
+  .success-screen h2{font-family:'Playfair Display',serif;font-size:32px;margin-bottom:10px;color:var(--success);}
+  .success-screen p{color:var(--gray);font-size:16px;}
+  .order-number{background:var(--orange-pale);border:2px dashed var(--orange);border-radius:10px;padding:15px 30px;display:inline-block;margin:20px 0;}
+  .order-number strong{font-size:24px;color:var(--orange);}
+  .about-section{background:var(--dark);color:white;padding:80px 20px;}
+  .about-inner{max-width:1000px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+  .about-inner h2{font-family:'Playfair Display',serif;font-size:40px;margin-bottom:20px;}
+  .about-inner p{color:rgba(255,255,255,.7);line-height:1.8;font-size:16px;margin-bottom:20px;}
+  .about-stats{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:30px;}
+  .about-stat strong{font-size:36px;font-weight:700;color:var(--orange-light);display:block;}
+  .about-stat span{font-size:13px;color:rgba(255,255,255,.5);}
+  .about-visual{background:var(--orange);border-radius:20px;height:300px;display:flex;align-items:center;justify-content:center;font-size:100px;}
+  .admin-panel{min-height:100vh;background:#F5F0EC;}
+  .admin-nav{background:var(--dark);color:white;padding:0 20px;display:flex;align-items:center;justify-content:space-between;min-height:60px;flex-wrap:wrap;gap:8px;}
+  .admin-nav .brand{font-family:'Playfair Display',serif;font-size:17px;color:var(--orange-light);}
+  .admin-nav-links{display:flex;gap:4px;flex-wrap:wrap;}
+  .admin-tab{background:none;border:none;color:rgba(255,255,255,.6);padding:7px 12px;border-radius:8px;cursor:pointer;font-size:13px;font-family:'Jost',sans-serif;transition:.2s;}
+  .admin-tab.active{background:var(--orange);color:white;}
+  .admin-logout{background:none;border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.7);padding:6px 12px;border-radius:8px;cursor:pointer;font-size:13px;font-family:'Jost',sans-serif;}
+  .admin-content{max-width:1100px;margin:0 auto;padding:30px 20px;}
+  .admin-section-title{font-family:'Playfair Display',serif;font-size:28px;margin-bottom:5px;}
+  .admin-section-sub{color:var(--gray);font-size:14px;margin-bottom:25px;}
+  .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:15px;margin-bottom:30px;}
+  .stat-card{background:white;border-radius:14px;padding:20px;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+  .stat-card .stat-val{font-size:30px;font-weight:700;color:var(--orange);}
+  .stat-card .stat-label{font-size:13px;color:var(--gray);margin-top:4px;}
+  .orders-table{background:white;border-radius:14px;box-shadow:0 2px 10px rgba(0,0,0,.05);overflow:hidden;}
+  .table-header{padding:18px 20px;border-bottom:1px solid var(--gray-light);display:flex;justify-content:space-between;align-items:center;}
+  .table-header h4{font-family:'Playfair Display',serif;font-size:20px;}
+  table{width:100%;border-collapse:collapse;}
+  th{background:var(--orange-pale);padding:12px 14px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--gray);}
+  td{padding:12px 14px;border-bottom:1px solid var(--gray-light);font-size:13px;vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  .sbadge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+  .s-new{background:#FFF3CD;color:#856404;}
+  .s-processing{background:#D1ECF1;color:#0C5460;}
+  .s-sent{background:#D4EDDA;color:#155724;}
+  .s-delivered{background:#D4EDDA;color:#155724;}
+  .abtn{background:var(--orange);color:white;border:none;padding:5px 11px;border-radius:16px;font-size:11px;cursor:pointer;font-family:'Jost',sans-serif;margin:2px;}
+  .abtn.sec{background:var(--gray-light);color:var(--dark);}
+  .abtn.del{background:#C0392B;}
+  .products-admin{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:18px;}
+  .pac{background:white;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.05);}
+  .pac-img{width:100%;height:130px;background:var(--orange-pale);display:flex;align-items:center;justify-content:center;font-size:48px;}
+  .pac-body{padding:14px;}
+  .pac-name{font-weight:700;font-size:15px;margin-bottom:3px;}
+  .pac-price{color:var(--orange);font-weight:700;font-size:17px;margin-bottom:10px;}
+  .courier-card{background:white;border-radius:14px;padding:18px;box-shadow:0 2px 10px rgba(0,0,0,.05);margin-bottom:14px;}
+  .courier-card h4{font-family:'Playfair Display',serif;font-size:17px;margin-bottom:5px;}
+  .cstatus{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;background:#FFF3CD;color:#856404;margin-bottom:10px;}
+  .cstatus.sent{background:#D4EDDA;color:#155724;}
+  .courier-btn{background:var(--orange);color:white;border:none;padding:9px 18px;border-radius:18px;font-size:13px;font-weight:600;cursor:pointer;font-family:'Jost',sans-serif;}
+  .login-page{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--dark);}
+  .login-box{background:white;border-radius:20px;padding:40px;width:min(390px,100%);margin:20px;}
+  .toast{position:fixed;bottom:25px;right:25px;background:var(--dark);color:white;padding:13px 20px;border-radius:12px;font-size:14px;font-weight:500;z-index:9999;transform:translateY(100px);opacity:0;transition:.3s;box-shadow:0 5px 25px rgba(0,0,0,.3);max-width:300px;}
+  .toast.show{transform:translateY(0);opacity:1;}
+  .toast.success{background:var(--success);}
+  .toast.error{background:var(--error);}
+  footer{background:var(--dark2);color:rgba(255,255,255,.6);text-align:center;padding:28px 20px;font-size:13px;}
+  footer a{color:var(--orange-light);text-decoration:none;cursor:pointer;}
+  @media(max-width:768px){
+    .nav-links{display:none;}
+    .features{flex-direction:column;}
+    .feature{border-right:none;border-bottom:1px solid rgba(255,255,255,.2);max-width:100%;}
+    .about-inner{grid-template-columns:1fr;}
+    .about-visual{display:none;}
+    .form-row{grid-template-columns:1fr;}
+    .stats-row{grid-template-columns:1fr 1fr;}
+    th,td{padding:8px;}
+    .mhide{display:none;}
+    .scrow{flex-direction:column;}
+    .admin-nav{padding:10px 15px;}
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div class="toast" id="toast"></div>
+<script>
+// ═══════════════════════════════════════════
+// SUPABASE
+// ═══════════════════════════════════════════
+const SURL='https://zqrjxkygssqdtkldxqgp.supabase.co';
+const SKEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inpxcmp4a3lnc3NxZHRrbGR4cWdwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MjczNDgsImV4cCI6MjA5MDEwMzM0OH0.3b6RpXGoo-C8uPEgtO5nD_g5etm0mIP68KK7fXCxBQc';
+const SH={'Content-Type':'application/json','apikey':SKEY,'Authorization':'Bearer '+SKEY};
+
+async function dbGet(table,q=''){
+  const r=await fetch(`${SURL}/rest/v1/${table}?${q}`,{headers:SH});
+  if(!r.ok)throw new Error(await r.text());
+  return r.json();
+}
+async function dbPost(table,body){
+  const r=await fetch(`${SURL}/rest/v1/${table}`,{method:'POST',headers:{...SH,'Prefer':'return=representation'},body:JSON.stringify(body)});
+  if(!r.ok)throw new Error(await r.text());
+  return r.json();
+}
+async function dbPatch(table,id,body){
+  const r=await fetch(`${SURL}/rest/v1/${table}?id=eq.${id}`,{method:'PATCH',headers:{...SH,'Prefer':'return=representation'},body:JSON.stringify(body)});
+  if(!r.ok)throw new Error(await r.text());
+  return r.json();
+}
+async function dbDel(table,id){
+  const r=await fetch(`${SURL}/rest/v1/${table}?id=eq.${id}`,{method:'DELETE',headers:SH});
+  if(!r.ok)throw new Error(await r.text());
+}
+
+// ═══════════════════════════════════════════
+// TRANSLATIONS
+// ═══════════════════════════════════════════
+const L={
+  hu:{nav_shop:'Termékek',nav_about:'Rólunk',nav_contact:'Kapcsolat',hero_badge:'Frissen pörkölt kávé',hero_h1:'A tökéletes',hero_h1b:'kávéélmény',hero_p:'Gondosan válogatott kávébabokból, szenvedéllyel pörkölve.',hero_btn1:'Termékek',hero_btn2:'Rólunk',f1:'Ingyenes szállítás 150 RON felett',f2:'Online & utánvétes fizetés',f3:'Fan Courier – 1-2 napos kézbesítés',pt:'Termékeink',ps:'Válogatott kávébabok a világ minden tájáról',add:'Kosárba',ct:'Kosár',ce:'A kosarad üres',tot:'Összesen',chk:'Megrendelés',chk_t:'Megrendelés leadása',fn:'Teljes név',fe:'Email cím',fp:'Telefonszám',fa:'Cím',fc:'Város',fz:'Irányítószám',fpay:'Fizetési mód',pc:'Bankkártya (Stripe)',pod:'Utánvét',cs:'Rendelés összesítő',csh:'Szállítás',cfr:'Ingyenes',cpl:'Rendelés leadása',cplg:'Feldolgozás...',st:'Rendelés leadva!',sm:'Köszönjük a rendelésedet! Hamarosan küldünk visszaigazoló emailt.',on:'Rendelésszám',at:'Rólunk',ap1:'A Dani\'s Coffee egy szenvedéllyel teli kávéüzlet, ahol minden egyes szem kávé egy utazást jelent.',ap2:'Csak a legjobb minőségű, gondosan válogatott kávébabokat kínáljuk.',con:'Kapcsolat',ftr:'© 2025 Dani\'s Coffee. Minden jog fenntartva.',g:'g',ld:'Termékek betöltése...',oos:'Elfogyott',sn:'Ingyenes szállítás <strong>150 RON</strong> feletti rendelésnél!',cnr:'Kártyaszám',exp:'Lejárat',cvc:'CVC',req:'Kötelező mezők',en:'Legalább 2 karakter',ee:'Érvénytelen email',eph:'Érvénytelen telefonszám',ez:'4-6 jegyű irányítószám',ec:'16 jegyű kártyaszám',eex:'MM/ÉÉ, jövőbeli dátum',ecv:'3-4 jegyű CVC',ef:'Kérem javítsa ki a hibás mezőket!',eo:'Hiba a rendelés leadásakor, próbálja újra.',vr:'kávéfajta',vh:'elégedett vásárló',vfr:'frissen pörkölt',vd:'napos kézbesítés'},
+  ro:{nav_shop:'Produse',nav_about:'Despre noi',nav_contact:'Contact',hero_badge:'Cafea proaspăt prăjită',hero_h1:'Experiența',hero_h1b:'perfectă a cafelei',hero_p:'Din boabe selectate cu grijă, prăjite cu pasiune.',hero_btn1:'Produse',hero_btn2:'Despre noi',f1:'Livrare gratuită peste 150 RON',f2:'Plată online & ramburs',f3:'Fan Courier – livrare 1-2 zile',pt:'Produsele noastre',ps:'Boabe de cafea selectate din toată lumea',add:'Adaugă în coș',ct:'Coș',ce:'Coșul tău e gol',tot:'Total',chk:'Comandă',chk_t:'Plasează comanda',fn:'Nume complet',fe:'Adresă email',fp:'Număr de telefon',fa:'Adresă',fc:'Oraș',fz:'Cod poștal',fpay:'Metoda de plată',pc:'Card bancar (Stripe)',pod:'Ramburs',cs:'Sumar comandă',csh:'Transport',cfr:'Gratuit',cpl:'Plasează comanda',cplg:'Se procesează...',st:'Comandă plasată!',sm:'Mulțumim pentru comandă! Vei primi în scurt timp un email de confirmare.',on:'Nr. comandă',at:'Despre noi',ap1:'Dani\'s Coffee este o afacere cu cafea plină de pasiune, unde fiecare bob de cafea reprezintă o călătorie.',ap2:'Oferim doar cafea de cea mai înaltă calitate, selectată cu grijă.',con:'Contact',ftr:'© 2025 Dani\'s Coffee. Toate drepturile rezervate.',g:'g',ld:'Se încarcă produsele...',oos:'Stoc epuizat',sn:'Livrare gratuită la comenzi peste <strong>150 RON</strong>!',cnr:'Nr. card',exp:'Expirare',cvc:'CVC',req:'Câmpuri obligatorii',en:'Minim 2 caractere',ee:'Email invalid',eph:'Număr de telefon invalid',ez:'Cod poștal de 4-6 cifre',ec:'Număr de card de 16 cifre',eex:'LL/AA, dată viitoare',ecv:'CVC de 3-4 cifre',ef:'Vă rugăm corectați câmpurile cu erori!',eo:'Eroare la plasarea comenzii, încercați din nou.',vr:'sortimente',vh:'clienți mulțumiți',vfr:'proaspăt prăjit',vd:'zile livrare'},
+  en:{nav_shop:'Products',nav_about:'About',nav_contact:'Contact',hero_badge:'Freshly Roasted Coffee',hero_h1:'The perfect',hero_h1b:'coffee experience',hero_p:'Carefully sourced coffee beans, roasted with passion.',hero_btn1:'Shop Now',hero_btn2:'Our Story',f1:'Free shipping over 150 RON',f2:'Online & cash on delivery',f3:'Fan Courier – 1-2 day delivery',pt:'Our Products',ps:'Handpicked coffee beans from around the world',add:'Add to Cart',ct:'Cart',ce:'Your cart is empty',tot:'Total',chk:'Checkout',chk_t:'Place your order',fn:'Full name',fe:'Email address',fp:'Phone number',fa:'Address',fc:'City',fz:'Postal code',fpay:'Payment method',pc:'Credit Card (Stripe)',pod:'Cash on Delivery',cs:'Order summary',csh:'Shipping',cfr:'Free',cpl:'Place Order',cplg:'Processing...',st:'Order placed!',sm:'Thank you for your order! You will receive a confirmation email shortly.',on:'Order number',at:'About us',ap1:'Dani\'s Coffee is a passion-driven coffee shop where every single bean represents a journey.',ap2:'We offer only the finest, carefully sourced coffee beans.',con:'Contact',ftr:'© 2025 Dani\'s Coffee. All rights reserved.',g:'g',ld:'Loading products...',oos:'Out of stock',sn:'Free shipping on orders over <strong>150 RON</strong>!',cnr:'Card number',exp:'Expiry',cvc:'CVC',req:'Required fields',en:'At least 2 characters',ee:'Invalid email',eph:'Invalid phone number',ez:'4-6 digit postal code',ec:'16-digit card number',eex:'MM/YY, future date',ecv:'3-4 digit CVC',ef:'Please fix the highlighted fields!',eo:'Error placing order, please try again.',vr:'varieties',vh:'happy customers',vfr:'freshly roasted',vd:'day delivery'}
+};
+
+// ═══════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════
+const S={
+  lang:'hu',page:'shop',adminPage:'orders',adminLoggedIn:false,
+  cartOpen:false,checkoutOpen:false,orderSuccess:false,lastOrderId:'',
+  editProduct:null,addProductOpen:false,
+  cart:[],products:[],orders:[],loading:true,dbError:false,placing:false,
+  form:{name:'',email:'',phone:'',address:'',city:'',zip:'',payment:'card',cn:'',ce:'',cc:''},
+  npf:{name:'',name_ro:'',name_en:'',desc:'',desc_ro:'',desc_en:'',price:'',weight:'250',emoji:'☕',stock:'',badge:''},
+};
+
+const T=k=>L[S.lang][k]||k;
+const $=id=>document.getElementById(id);
+const esc=v=>(v||'').toString().replace(/"/g,'&quot;').replace(/</g,'&lt;');
+
+// ═══════════════════════════════════════════
+// VALIDATION
+// ═══════════════════════════════════════════
+const V={
+  name:v=>v.trim().length>=2,
+  email:v=>/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
+  phone:v=>/^[+]?[\d\s\-(). ]{7,20}$/.test(v.trim()),
+  zip:v=>!v.trim()||/^\d{4,6}$/.test(v.trim()),
+  city:v=>v.trim().length>=1,
+  addr:v=>v.trim().length>=4,
+  cn:v=>v.replace(/\s/g,'').length===16&&/^\d+$/.test(v.replace(/\s/g,'')),
+  cexp:v=>{const m=v.match(/^(\d{2})\/(\d{2})$/);if(!m)return false;const mo=+m[1],yr=+m[2]+2000,n=new Date();return mo>=1&&mo<=12&&(yr>n.getFullYear()||(yr===n.getFullYear()&&mo>=n.getMonth()+1));},
+  cvc:v=>/^\d{3,4}$/.test(v.trim()),
+};
+
+function sf(id,ok,msg,stripe=false){
+  const el=$(id),hint=$(id+'-h');
+  if(el){el.classList.toggle(stripe?'finvalid':'finvalid',!ok);el.classList.toggle(stripe?'fvalid':'fvalid',ok);}
+  if(hint){hint.textContent=ok?'':msg;hint.className=(stripe?'shint':'fhint')+(ok?'':' err');}
+}
+function lv(field){
+  const f=S.form,t=T;
+  if(field==='name')    sf('i-name', V.name(f.name),   t('en'));
+  if(field==='email')   sf('i-email',V.email(f.email), t('ee'));
+  if(field==='phone')   sf('i-phone',V.phone(f.phone), t('eph'));
+  if(field==='zip')     sf('i-zip',  V.zip(f.zip),     t('ez'));
+  if(field==='city')    sf('i-city', V.city(f.city),   '');
+  if(field==='addr')    sf('i-addr', V.addr(f.address),'');
+  if(field==='cn')      sf('i-cn',   V.cn(f.cn),       t('ec'),  true);
+  if(field==='cexp')    sf('i-cexp', V.cexp(f.ce),     t('eex'), true);
+  if(field==='cvc')     sf('i-cvc',  V.cvc(f.cc),      t('ecv'), true);
+}
+const fmtCN=v=>v.replace(/\D/g,'').slice(0,16).replace(/(.{4})/g,'$1 ').trim();
+const fmtExp=v=>{const d=v.replace(/\D/g,'').slice(0,4);return d.length>2?d.slice(0,2)+'/'+d.slice(2):d;};
+
+// ═══════════════════════════════════════════
+// CART
+// ═══════════════════════════════════════════
+function addToCart(id){
+  const p=S.products.find(x=>x.id===id);if(!p)return;
+  const ex=S.cart.find(i=>i.id===id);
+  if(ex)ex.qty++;else S.cart.push({...p,qty:1});
+  toast('✓ '+gn(p)+' '+(S.lang==='hu'?'kosárba rakva':S.lang==='ro'?'adăugat în coș':'added to cart'),'success');
+  render();
+}
+function rmCart(id){S.cart=S.cart.filter(i=>i.id!==id);render();}
+function chQty(id,d){const i=S.cart.find(x=>x.id===id);if(!i)return;i.qty+=d;if(i.qty<=0)rmCart(id);else render();}
+function cTotal(){return S.cart.reduce((s,i)=>s+i.price*i.qty,0);}
+function cCount(){return S.cart.reduce((s,i)=>s+i.qty,0);}
+function gn(p){return p['name_'+S.lang]||p.name_hu||'';}
+function gd(p){return p['desc_'+S.lang]||p.desc_hu||'';}
+function gb(p){return p['badge_'+S.lang]||p.badge_hu||'';}
+
+// ═══════════════════════════════════════════
+// DB OPERATIONS
+// ═══════════════════════════════════════════
+async function loadProducts(){
+  try{
+    S.products=await dbGet('products','active=eq.true&order=id');
+    S.loading=false;S.dbError=false;
+  }catch(e){
+    console.error(e);S.loading=false;S.dbError=true;
+  }
+  render();
+}
+
+async function loadOrders(){
+  try{
+    S.orders=await dbGet('orders','order=created_at.desc');
+  }catch(e){
+    console.error(e);toast('Nem sikerült betölteni a rendeléseket.','error');
+  }
+  render();
+}
+
+async function placeOrder(){
+  const f=S.form;const errs=[];
+  if(!V.name(f.name)){errs.push(1);sf('i-name',false,T('en'));}
+  if(!V.email(f.email)){errs.push(1);sf('i-email',false,T('ee'));}
+  if(!V.phone(f.phone)){errs.push(1);sf('i-phone',false,T('eph'));}
+  if(!V.city(f.city)){errs.push(1);sf('i-city',false,'');}
+  if(!V.addr(f.address)){errs.push(1);sf('i-addr',false,'');}
+  if(f.zip&&!V.zip(f.zip)){errs.push(1);sf('i-zip',false,T('ez'));}
+  if(f.payment==='card'){
+    if(!V.cn(f.cn)){errs.push(1);sf('i-cn',false,T('ec'),true);}
+    if(!V.cexp(f.ce)){errs.push(1);sf('i-cexp',false,T('eex'),true);}
+    if(!V.cvc(f.cc)){errs.push(1);sf('i-cvc',false,T('ecv'),true);}
+  }
+  if(errs.length){toast('❌ '+T('ef'),'error');return;}
+
+  S.placing=true;render();
+  const total=cTotal();
+  const oid='DC-'+Date.now().toString().slice(-7);
+  try{
+    await dbPost('orders',{
+      id:oid,customer_name:f.name.trim(),customer_email:f.email.trim(),
+      customer_phone:f.phone.trim(),address:f.address.trim(),city:f.city.trim(),
+      zip:f.zip.trim(),items:S.cart.map(i=>({id:i.id,name:gn(i),qty:i.qty,price:i.price})),
+      total:total+(total>=150?0:15),payment:f.payment,status:'new',courier_sent:false
+    });
+    S.lastOrderId=oid;S.cart=[];S.checkoutOpen=false;S.orderSuccess=true;S.placing=false;
+    S.form={name:'',email:'',phone:'',address:'',city:'',zip:'',payment:'card',cn:'',ce:'',cc:''};
+    toast('✓ Rendelés sikeresen leadva!','success');
+  }catch(e){
+    console.error(e);S.placing=false;toast('❌ '+T('eo'),'error');
+  }
+  render();
+}
+
+async function updOrderStatus(id,status){
+  try{
+    await dbPatch('orders',id,{status});
+    const o=S.orders.find(x=>x.id===id);if(o)o.status=status;render();
+  }catch(e){toast('Hiba a státusz frissítésekor!','error');}
+}
+
+async function sendCourier(id){
+  try{
+    await dbPatch('orders',id,{courier_sent:true,status:'processing'});
+    const o=S.orders.find(x=>x.id===id);if(o){o.courier_sent=true;o.status='processing';}
+    toast('🚚 Fan Courier értesítve!','success');render();
+  }catch(e){toast('Hiba a futár értesítésekor!','error');}
+}
+
+async function saveProduct(){
+  const f=S.npf;
+  if(!f.name||!f.price){toast('Kérem töltse ki a kötelező mezőket (*)!','error');return;}
+  const body={name_hu:f.name,name_ro:f.name_ro||f.name,name_en:f.name_en||f.name,
+    desc_hu:f.desc,desc_ro:f.desc_ro||f.desc,desc_en:f.desc_en||f.desc,
+    price:parseFloat(f.price),weight:parseInt(f.weight)||250,emoji:f.emoji||'☕',
+    stock:parseInt(f.stock)||0,badge_hu:f.badge,badge_ro:f.badge,badge_en:f.badge,active:true};
+  try{
+    if(S.editProduct)await dbPatch('products',S.editProduct,body);
+    else await dbPost('products',body);
+    S.addProductOpen=false;S.editProduct=null;
+    S.npf={name:'',name_ro:'',name_en:'',desc:'',desc_ro:'',desc_en:'',price:'',weight:'250',emoji:'☕',stock:'',badge:''};
+    toast('✓ '+(S.editProduct?'Termék frissítve!':'Termék hozzáadva!'),'success');
+    await loadProducts();
+  }catch(e){console.error(e);toast('Hiba a termék mentésekor!','error');}
+}
+
+async function deleteProduct(id){
+  if(!confirm('Biztosan törölni szeretnéd ezt a terméket?'))return;
+  try{
+    await dbDel('products',id);
+    S.products=S.products.filter(p=>p.id!==id);
+    toast('✓ Termék törölve','success');render();
+  }catch(e){toast('Hiba a törléskor!','error');}
+}
+
+function openEditProduct(p){
+  S.editProduct=p.id;
+  S.npf={name:p.name_hu,name_ro:p.name_ro,name_en:p.name_en,desc:p.desc_hu,desc_ro:p.desc_ro,desc_en:p.desc_en,price:p.price,weight:p.weight,emoji:p.emoji||'☕',stock:p.stock,badge:p.badge_hu||''};
+  S.addProductOpen=true;render();
+}
+
+// ═══════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════
+function toast(msg,type=''){
+  const el=$('toast');el.textContent=msg;el.className='toast '+type+' show';
+  setTimeout(()=>el.className='toast',3000);
+}
+
+// ═══════════════════════════════════════════
+// RENDER
+// ═══════════════════════════════════════════
+function render(){if(S.page==='admin'){renderAdmin();return;}renderShop();}
+
+function renderShop(){
+  const total=cTotal();const count=cCount();
+  $('app').innerHTML=`
+    <div class="topbar">☕ ${T('f1')} &nbsp;|&nbsp; ${T('f3')}</div>
+    <nav>
+      <div class="nav-inner">
+        <div class="logo-wrap" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+          <div class="logo-circle-nav">D</div>
+          <span class="logo-text">Dani's Coffee</span>
+        </div>
+        <div class="nav-links">
+          <a onclick="smth('products')">${T('nav_shop')}</a>
+          <a onclick="smth('about')">${T('nav_about')}</a>
+          <a onclick="smth('contact')">${T('nav_contact')}</a>
+          <a onclick="goAdmin()" style="color:var(--gray)">Admin ↗</a>
+        </div>
+        <div class="nav-right">
+          ${['hu','ro','en'].map(l=>`<button class="lang-btn ${S.lang===l?'active':''}" onclick="S.lang='${l}';render()">${l.toUpperCase()}</button>`).join('')}
+          <button class="cart-btn" onclick="S.cartOpen=!S.cartOpen;render()">
+            🛒 ${T('ct')}${count>0?` <span class="cart-count">${count}</span>`:''}
+          </button>
+        </div>
+      </div>
+    </nav>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="hero-badge">${T('hero_badge')}</div>
+        <h1>${T('hero_h1')} <span>${T('hero_h1b')}</span></h1>
+        <p>${T('hero_p')}</p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="smth('products')">${T('hero_btn1')}</button>
+          <button class="btn-outline" onclick="smth('about')">${T('hero_btn2')}</button>
+        </div>
+      </div>
+    </section>
+    <div class="features">
+      <div class="feature"><strong>🚚</strong>${T('f1')}</div>
+      <div class="feature"><strong>💳</strong>${T('f2')}</div>
+      <div class="feature"><strong>📦</strong>${T('f3')}</div>
+    </div>
+    <section class="section" id="products">
+      <h2 class="section-title">${T('pt')}</h2>
+      <p class="section-sub">${T('ps')}</p>
+      <div class="divider"></div>
+      ${S.loading
+        ?`<div class="spinner-wrap"><div class="spinner"></div><p>${T('ld')}</p></div>`
+        :S.dbError
+          ?`<div style="text-align:center;padding:40px;color:var(--error)">⚠️ Adatbázis kapcsolati hiba. Ellenőrizze a Supabase beállításokat és az SQL táblák létrehozását.</div>`
+          :S.products.length===0
+            ?`<div style="text-align:center;padding:40px;color:var(--gray)">Nincsenek termékek.</div>`
+            :`<div class="products-grid">${S.products.map(p=>`
+              <div class="product-card">
+                <div class="product-img">${p.emoji||'☕'}</div>
+                <div class="product-body">
+                  <div class="product-badge">${gb(p)}</div>
+                  <div class="product-name">${gn(p)}</div>
+                  <div class="product-desc">${gd(p)}</div>
+                  <div class="product-footer">
+                    <div class="product-price">${p.price} <small>RON</small><span> / ${p.weight}${T('g')}</span></div>
+                    ${p.stock>0
+                      ?`<button class="add-btn" onclick="addToCart(${p.id})">+</button>`
+                      :`<span style="font-size:12px;color:var(--gray);font-weight:600">${T('oos')}</span>`}
+                  </div>
+                </div>
+              </div>`).join('')}</div>`}
+    </section>
+    <section class="about-section" id="about">
+      <div class="about-inner">
+        <div>
+          <h2>${T('at')}</h2><p>${T('ap1')}</p><p>${T('ap2')}</p>
+          <div class="about-stats">
+            <div class="about-stat"><strong>7+</strong><span>${T('vr')}</span></div>
+            <div class="about-stat"><strong>500+</strong><span>${T('vh')}</span></div>
+            <div class="about-stat"><strong>100%</strong><span>${T('vfr')}</span></div>
+            <div class="about-stat"><strong>1-2</strong><span>${T('vd')}</span></div>
+          </div>
+        </div>
+        <div class="about-visual">☕</div>
+      </div>
+    </section>
+    <section class="section" id="contact">
+      <h2 class="section-title">${T('con')}</h2><div class="divider"></div>
+      <div style="text-align:center;color:var(--gray);font-size:16px;line-height:2.5">
+        📧 <a href="mailto:hello@daniscoffee.ro" style="color:var(--orange)">hello@daniscoffee.ro</a><br>
+        📞 <a href="tel:+40700000000" style="color:var(--orange)">+40 700 000 000</a><br>
+        📍 Romania
+      </div>
+    </section>
+    <footer><p>${T('ftr')} &nbsp;|&nbsp; <a onclick="goAdmin()">Admin panel</a></p></footer>
+
+    <!-- CART -->
+    <div class="cart-overlay ${S.cartOpen?'open':''}" onclick="S.cartOpen=false;render()"></div>
+    <div class="cart-sidebar ${S.cartOpen?'open':''}">
+      <div class="cart-header"><h3>🛒 ${T('ct')}</h3><button class="close-btn" onclick="S.cartOpen=false;render()">✕</button></div>
+      <div class="cart-items">
+        ${S.cart.length===0
+          ?`<div class="empty-cart"><div>☕</div><p>${T('ce')}</p></div>`
+          :S.cart.map(i=>`
+            <div class="cart-item">
+              <div class="cart-item-emoji">${i.emoji||'☕'}</div>
+              <div class="cart-item-info">
+                <div class="cart-item-name">${gn(i)}</div>
+                <div class="cart-item-price">${i.price} RON × ${i.qty}</div>
+              </div>
+              <div class="cart-item-qty">
+                <button class="qty-btn" onclick="chQty(${i.id},-1)">−</button>
+                <span>${i.qty}</span>
+                <button class="qty-btn" onclick="chQty(${i.id},1)">+</button>
+              </div>
+            </div>`).join('')}
+      </div>
+      ${S.cart.length>0?`
+        <div class="cart-footer">
+          <div class="shipping-info">${T('sn')}</div>
+          <div class="cart-total"><span>${T('tot')}</span><span>${total+(total>=150?0:15)} RON</span></div>
+          <button class="checkout-btn" onclick="S.cartOpen=false;S.checkoutOpen=true;render()">${T('chk')} →</button>
+        </div>`:''}
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div class="modal-overlay ${S.checkoutOpen?'open':''}" id="chk-ov">
+      <div class="modal" onclick="event.stopPropagation()">
+        ${S.orderSuccess?renderSuccess():renderChkForm()}
+      </div>
+    </div>`;
+
+  const ov=$('chk-ov');
+  if(ov)ov.onclick=e=>{if(e.target===ov&&!S.placing){S.checkoutOpen=false;S.orderSuccess=false;render();}};
+}
+
+function renderChkForm(){
+  const f=S.form;const total=cTotal();
+  const req='<span style="color:var(--error)">*</span>';
+  const h=id=>`<span class="fhint" id="${id}-h"></span>`;
+  const sh=id=>`<span class="shint" id="${id}-h"></span>`;
+  return `
+    <div class="modal-header">
+      <h3>🛒 ${T('chk_t')}</h3>
+      <button class="close-btn" onclick="if(!S.placing){S.checkoutOpen=false;S.orderSuccess=false;render()}">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="order-summary">
+        <div class="order-summary-title">📋 ${T('cs')}</div>
+        ${S.cart.map(i=>`<div class="order-line"><span>${gn(i)} ×${i.qty}</span><span>${i.price*i.qty} RON</span></div>`).join('')}
+        <div class="order-line"><span>${T('csh')}</span><span style="color:var(--success)">${total>=150?T('cfr'):'15 RON'}</span></div>
+        <div class="order-total"><span>${T('tot')}</span><span>${total+(total>=150?0:15)} RON</span></div>
+      </div>
+      <p style="font-size:12px;color:var(--gray);margin-bottom:16px">${req} ${T('req')}</p>
+      <div class="form-row">
+        <div class="form-group">
+          <label>${T('fn')} ${req}</label>
+          <input id="i-name" value="${esc(f.name)}" oninput="S.form.name=this.value;lv('name')" placeholder="Kovács Anna" autocomplete="name">
+          ${h('i-name')}
+        </div>
+        <div class="form-group">
+          <label>${T('fe')} ${req}</label>
+          <input id="i-email" type="email" value="${esc(f.email)}" oninput="S.form.email=this.value;lv('email')" placeholder="email@example.com" autocomplete="email" inputmode="email">
+          ${h('i-email')}
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label>${T('fp')} ${req}</label>
+          <input id="i-phone" value="${esc(f.phone)}" oninput="S.form.phone=this.value;lv('phone')" placeholder="+40 740 123 456" autocomplete="tel" inputmode="tel">
+          ${h('i-phone')}
+        </div>
+        <div class="form-group">
+          <label>${T('fz')}</label>
+          <input id="i-zip" value="${esc(f.zip)}" oninput="S.form.zip=this.value;lv('zip')" placeholder="400001" maxlength="6" inputmode="numeric" onkeypress="return /[0-9]/.test(event.key)">
+          ${h('i-zip')}
+        </div>
+      </div>
+      <div class="form-group">
+        <label>${T('fc')} ${req}</label>
+        <input id="i-city" value="${esc(f.city)}" oninput="S.form.city=this.value;lv('city')" placeholder="Cluj-Napoca" autocomplete="address-level2">
+        ${h('i-city')}
+      </div>
+      <div class="form-group">
+        <label>${T('fa')} ${req}</label>
+        <input id="i-addr" value="${esc(f.address)}" oninput="S.form.address=this.value;lv('addr')" placeholder="Str. Florilor 12." autocomplete="street-address">
+        ${h('i-addr')}
+      </div>
+      <div class="form-group">
+        <label>${T('fpay')}</label>
+        <div class="payment-methods">
+          <div class="pay-method ${f.payment==='card'?'selected':''}" onclick="S.form.payment='card';render()">
+            <div class="icon">💳</div><div class="label">${T('pc')}</div>
+          </div>
+          <div class="pay-method ${f.payment==='cod'?'selected':''}" onclick="S.form.payment='cod';render()">
+            <div class="icon">💵</div><div class="label">${T('pod')}</div>
+          </div>
+        </div>
+      </div>
+      ${f.payment==='card'?`
+        <div class="stripe-mock">
+          <div class="stripe-mock-label">🔒 STRIPE SECURE PAYMENT</div>
+          <div class="form-group" style="margin-bottom:8px">
+            <input id="i-cn" class="sinput" placeholder="${T('cnr')}: 4242 4242 4242 4242"
+              value="${esc(f.cn)}" maxlength="19" inputmode="numeric"
+              oninput="const v=fmtCN(this.value);this.value=v;S.form.cn=v;lv('cn')">
+            ${sh('i-cn')}
+          </div>
+          <div class="scrow">
+            <div style="flex:1">
+              <input id="i-cexp" class="sinput" placeholder="${T('exp')}: MM/YY"
+                value="${esc(f.ce)}" maxlength="5" inputmode="numeric"
+                oninput="const v=fmtExp(this.value);this.value=v;S.form.ce=v;lv('cexp')">
+              ${sh('i-cexp')}
+            </div>
+            <div style="max-width:120px">
+              <input id="i-cvc" class="sinput" placeholder="${T('cvc')}: 123"
+                value="${esc(f.cc)}" maxlength="4" inputmode="numeric"
+                onkeypress="return /[0-9]/.test(event.key)"
+                oninput="S.form.cc=this.value.replace(/\\D/g,'');lv('cvc')">
+              ${sh('i-cvc')}
+            </div>
+          </div>
+        </div>`:''}
+      <button class="place-btn" onclick="placeOrder()" ${S.placing?'disabled':''}>
+        ${S.placing?'⏳ '+T('cplg'):'✓ '+T('cpl')}
+      </button>
+    </div>`;
+}
+
+function renderSuccess(){
+  return `
+    <div class="success-screen">
+      <div class="success-icon">🎉</div>
+      <h2>${T('st')}</h2>
+      <p>${T('sm')}</p>
+      <div class="order-number">
+        <div style="font-size:12px;color:var(--gray);margin-bottom:4px">${T('on')}</div>
+        <strong>${S.lastOrderId}</strong>
+      </div><br>
+      <button class="btn-primary" onclick="S.checkoutOpen=false;S.orderSuccess=false;render()">OK</button>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════
+// ADMIN RENDER
+// ═══════════════════════════════════════════
+function renderAdmin(){
+  if(!S.adminLoggedIn){renderAdminLogin();return;}
+  const newN=S.orders.filter(o=>o.status==='new').length;
+  $('app').innerHTML=`
+    <div class="admin-panel">
+      <div class="admin-nav">
+        <div class="brand">☕ Dani's Coffee — Admin</div>
+        <div class="admin-nav-links">
+          <button class="admin-tab ${S.adminPage==='orders'?'active':''}" onclick="S.adminPage='orders';loadOrders()">
+            📋 Rendelések${newN>0?` <span style="background:var(--orange);color:white;border-radius:10px;padding:1px 7px;font-size:11px;margin-left:4px">${newN}</span>`:''}
+          </button>
+          <button class="admin-tab ${S.adminPage==='products'?'active':''}" onclick="S.adminPage='products';render()">🛍️ Termékek</button>
+          <button class="admin-tab ${S.adminPage==='courier'?'active':''}" onclick="S.adminPage='courier';loadOrders()">🚚 Futár</button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="admin-logout" onclick="S.page='shop';render()">← Webshop</button>
+          <button class="admin-logout" onclick="S.adminLoggedIn=false;S.page='shop';render()">Kijelentkezés</button>
+        </div>
+      </div>
+      <div class="admin-content">
+        ${S.adminPage==='orders'  ?renderAdminOrders()  :''}
+        ${S.adminPage==='products'?renderAdminProducts():''}
+        ${S.adminPage==='courier' ?renderAdminCourier() :''}
+      </div>
+    </div>
+    ${S.addProductOpen?renderProdModal():''}`;
+}
+
+function renderAdminOrders(){
+  const rev=S.orders.reduce((s,o)=>s+o.total,0);
+  return `
+    <div class="admin-section-title">Rendelések</div>
+    <div class="admin-section-sub">Valós idejű adatok a Supabase adatbázisból</div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-val">${S.orders.length}</div><div class="stat-label">Összes rendelés</div></div>
+      <div class="stat-card"><div class="stat-val">${S.orders.filter(o=>o.status==='new').length}</div><div class="stat-label">Új rendelés</div></div>
+      <div class="stat-card"><div class="stat-val">${rev} RON</div><div class="stat-label">Összes bevétel</div></div>
+      <div class="stat-card"><div class="stat-val">${S.orders.filter(o=>o.courier_sent).length}</div><div class="stat-label">Feladva futárnak</div></div>
+    </div>
+    <div class="orders-table">
+      <div class="table-header">
+        <h4>📋 Rendelések listája</h4>
+        <button class="abtn sec" onclick="loadOrders()">🔄 Frissítés</button>
+      </div>
+      <div style="overflow-x:auto">
+        ${S.orders.length===0
+          ?`<p style="padding:30px;color:var(--gray);text-align:center">Még nincs rendelés.</p>`
+          :`<table>
+            <thead><tr>
+              <th>Rendelésszám</th><th>Vevő</th><th class="mhide">Termékek</th>
+              <th>Összeg</th><th class="mhide">Fizetés</th><th>Státusz</th><th>Műveletek</th>
+            </tr></thead>
+            <tbody>
+              ${S.orders.map(o=>`
+                <tr>
+                  <td><strong>${o.id}</strong><br><small style="color:var(--gray)">${(o.created_at||'').slice(0,10)}</small></td>
+                  <td>${o.customer_name}<br><small style="color:var(--gray)">${o.customer_phone}</small><br><small style="color:var(--gray)">${o.customer_email}</small></td>
+                  <td class="mhide" style="font-size:12px">${Array.isArray(o.items)?o.items.map(i=>`${i.name} ×${i.qty}`).join('<br>'):''}</td>
+                  <td><strong>${o.total} RON</strong></td>
+                  <td class="mhide">${o.payment==='card'?'💳 Kártya':'💵 Utánvét'}</td>
+                  <td><span class="sbadge s-${o.status}">${{new:'🆕 Új',processing:'⚙️ Folyamatban',sent:'✅ Feladva',delivered:'📦 Kézbesítve'}[o.status]||o.status}</span></td>
+                  <td>
+                    <select style="font-size:12px;padding:5px;border:1px solid var(--gray-light);border-radius:6px;cursor:pointer;margin-bottom:6px;display:block" onchange="updOrderStatus('${o.id}',this.value)">
+                      <option value="new" ${o.status==='new'?'selected':''}>Új</option>
+                      <option value="processing" ${o.status==='processing'?'selected':''}>Folyamatban</option>
+                      <option value="sent" ${o.status==='sent'?'selected':''}>Feladva</option>
+                      <option value="delivered" ${o.status==='delivered'?'selected':''}>Kézbesítve</option>
+                    </select>
+                    ${!o.courier_sent
+                      ?`<button class="abtn" onclick="sendCourier('${o.id}')">🚚 Futár</button>`
+                      :`<small style="color:var(--success)">✓ Futár értesítve</small>`}
+                  </td>
+                </tr>`).join('')}
+            </tbody>
+          </table>`}
+      </div>
+    </div>`;
+}
+
+function renderAdminProducts(){
+  return `
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;flex-wrap:wrap;gap:10px">
+      <div>
+        <div class="admin-section-title">Termékek</div>
+        <div class="admin-section-sub">Változások azonnal megjelennek a webshopban (Supabase)</div>
+      </div>
+      <button class="add-product-btn" onclick="S.addProductOpen=true;S.editProduct=null;S.npf={name:'',name_ro:'',name_en:'',desc:'',desc_ro:'',desc_en:'',price:'',weight:'250',emoji:'☕',stock:'',badge:''};render()">+ Új termék</button>
+    </div>
+    <div class="products-admin">
+      ${S.products.map(p=>`
+        <div class="pac">
+          <div class="pac-img">${p.emoji||'☕'}</div>
+          <div class="pac-body">
+            <div class="pac-name">${p.name_hu}</div>
+            <div style="font-size:12px;color:var(--gray);margin-bottom:6px">${p.weight}g · ${p.stock} db raktáron</div>
+            <div class="pac-price">${p.price} RON</div>
+            <div style="display:flex;gap:5px;flex-wrap:wrap">
+              <button class="abtn sec" onclick='openEditProduct(${JSON.stringify(p).replace(/'/g,"&#39;")})'>✏️ Szerkesztés</button>
+              <button class="abtn del" onclick="deleteProduct(${p.id})">🗑️ Törlés</button>
+            </div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+}
+
+function renderAdminCourier(){
+  const unsent=S.orders.filter(o=>!o.courier_sent);
+  const sent=S.orders.filter(o=>o.courier_sent);
+  return `
+    <div class="admin-section-title">🚚 Fan Courier – Feladás</div>
+    <div class="admin-section-sub">Rendelések feladása a futárszolgálatnak</div>
+    <div style="background:var(--orange-pale);border:2px solid var(--orange);border-radius:12px;padding:15px;margin-bottom:24px">
+      <strong>📦 Fan Courier integráció</strong><br>
+      <small style="color:var(--gray)">Gombra kattintva a courier_sent és status mező frissül az adatbázisban. Valódi AWB generáláshoz Fan Courier API kulcs szükséges – ezt később be lehet kötni.</small>
+    </div>
+    <h4 style="font-family:'Playfair Display',serif;margin-bottom:14px">⏳ Feladásra váró (${unsent.length})</h4>
+    ${unsent.length===0?'<p style="color:var(--gray);margin-bottom:20px">Nincs feladásra váró rendelés.</p>':
+      unsent.map(o=>`
+        <div class="courier-card">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">
+            <div>
+              <h4>${o.id} – ${o.customer_name}</h4>
+              <div class="cstatus">⏳ Feladásra vár</div>
+              <div style="font-size:13px;color:var(--gray)">📍 ${o.address}, ${o.zip||''} ${o.city}</div>
+              <div style="font-size:13px;color:var(--gray)">📞 ${o.customer_phone}</div>
+              <div style="font-size:13px;color:var(--gray)">💰 ${o.total} RON · ${o.payment==='cod'?'Utánvét':'Előre fizetve'}</div>
+            </div>
+            <button class="courier-btn" onclick="sendCourier('${o.id}')">🚚 Futár értesítése</button>
+          </div>
+        </div>`).join('')}
+    <h4 style="font-family:'Playfair Display',serif;margin:22px 0 14px">✅ Feladott rendelések (${sent.length})</h4>
+    ${sent.map(o=>`
+      <div class="courier-card" style="opacity:.7">
+        <h4>${o.id} – ${o.customer_name}</h4>
+        <span class="cstatus sent">✅ Fan Courier értesítve</span>
+        <div style="font-size:13px;color:var(--gray)">${o.address}, ${o.city} · ${o.total} RON</div>
+      </div>`).join('')}`;
+}
+
+function renderProdModal(){
+  const f=S.npf;const isEdit=!!S.editProduct;
+  return `
+    <div class="modal-overlay open" onclick="if(event.target===this){S.addProductOpen=false;S.editProduct=null;render();}">
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="modal-header">
+          <h3>${isEdit?'✏️ Termék szerkesztése':'➕ Új termék hozzáadása'}</h3>
+          <button class="close-btn" onclick="S.addProductOpen=false;S.editProduct=null;render()">✕</button>
+        </div>
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group"><label>Emoji ikon</label><input value="${esc(f.emoji)}" oninput="S.npf.emoji=this.value" placeholder="☕"></div>
+            <div class="form-group"><label>Súly (g)</label><input type="number" value="${f.weight}" oninput="S.npf.weight=this.value" placeholder="250"></div>
+          </div>
+          <div class="form-group"><label>Magyar név *</label><input value="${esc(f.name)}" oninput="S.npf.name=this.value" placeholder="pl. Ethiopia Yirgacheffe"></div>
+          <div class="form-row">
+            <div class="form-group"><label>Román név</label><input value="${esc(f.name_ro||'')}" oninput="S.npf.name_ro=this.value" placeholder="(ha eltér a magyartól)"></div>
+            <div class="form-group"><label>Angol név</label><input value="${esc(f.name_en||'')}" oninput="S.npf.name_en=this.value" placeholder="(ha eltér a magyartól)"></div>
+          </div>
+          <div class="form-group"><label>Magyar leírás</label>
+            <textarea oninput="S.npf.desc=this.value" rows="2" style="width:100%;padding:12px;border:1.5px solid var(--gray-light);border-radius:10px;font-family:'Jost',sans-serif;resize:vertical">${esc(f.desc)}</textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group"><label>Ár (RON) *</label><input type="number" value="${f.price}" oninput="S.npf.price=this.value" placeholder="45"></div>
+            <div class="form-group"><label>Raktárkészlet (db)</label><input type="number" value="${f.stock}" oninput="S.npf.stock=this.value" placeholder="50"></div>
+          </div>
+          <div class="form-group"><label>Badge / Cimke</label><input value="${esc(f.badge||'')}" oninput="S.npf.badge=this.value" placeholder="Bestseller"></div>
+          <button class="place-btn" onclick="saveProduct()">💾 ${isEdit?'Mentés':'Hozzáadás az adatbázisba'}</button>
+        </div>
+      </div>
+    </div>`;
+}
+
+function renderAdminLogin(){
+  $('app').innerHTML=`
+    <div class="login-page">
+      <div class="login-box">
+        <div style="text-align:center;margin-bottom:28px">
+          <div style="width:75px;height:75px;background:var(--orange);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:36px;margin:0 auto 14px;font-family:'Playfair Display',serif;font-weight:900;color:white">D</div>
+          <h2 style="font-family:'Playfair Display',serif;font-size:24px">Dani's Coffee</h2>
+          <p style="color:var(--gray);font-size:14px;margin-top:4px">Admin Panel</p>
+        </div>
+        <div class="form-group"><label>Felhasználónév</label><input id="au" placeholder="admin" type="text" onkeydown="if(event.key==='Enter')adminLogin()"></div>
+        <div class="form-group"><label>Jelszó</label><input id="ap" placeholder="••••••" type="password" onkeydown="if(event.key==='Enter')adminLogin()"></div>
+        <button class="place-btn" onclick="adminLogin()">Bejelentkezés →</button>
+        <p style="text-align:center;margin-top:12px;font-size:12px;color:var(--gray)">Demo: admin / admin123</p>
+        <p style="text-align:center;margin-top:8px"><button onclick="S.page='shop';render()" style="background:none;border:none;color:var(--orange);cursor:pointer;font-size:13px">← Vissza a webshophoz</button></p>
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+function smth(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'});}
+function goAdmin(){S.page='admin';S.adminPage='orders';render();loadOrders();}
+
+function adminLogin(){
+  const u=$('au')?.value,p=$('ap')?.value;
+  if(u==='admin'&&p==='admin123'){S.adminLoggedIn=true;S.page='admin';S.adminPage='orders';loadOrders();}
+  else toast('Hibás bejelentkezési adatok!','error');
+}
+
+// ═══════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════
+render();
+loadProducts();
+</script>
+</body>
+</html>
